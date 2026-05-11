@@ -364,6 +364,7 @@ namespace NovaPay_Bank_System
         }
 
     }
+
     class Transaction
     {
         string type;
@@ -380,9 +381,10 @@ namespace NovaPay_Bank_System
             this.note = note;
         }
 
+        // method to display the transaction information
         public void DisplayInfo()
         {
-
+            Console.WriteLine(date + type + amount + note);
         }
     }
 
