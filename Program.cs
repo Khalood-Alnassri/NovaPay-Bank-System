@@ -284,7 +284,54 @@ namespace NovaPay_Bank_System
 
     class CurrentAccount : BankAccount
     {
+        double overdraftLimit;
+
+        // property to only get the overdraft limit
+        public double GetOverdraftLimit { get; }
+
+        // constructor to initialize the current account
+        public CurrentAccount(string ownerName, double overdraftLimit) : base(ownerName)
+        {
+            AccountType = "Current";
+
+            if (overdraftLimit >= 0)
+            {
+                this.overdraftLimit = overdraftLimit;
+            }
+
+            else
+            {
+                Console.WriteLine("Overdraft limit must be non negative.");
+            }
+        }
+
+        // method to Withdraw
+        public override void Withdraw(double amount)
+        {
+            if (amount > 0 && (balance - amount) >= -overdraftLimit)
+            {
+                balance -= amount;
+                BankAccount.IncreaseTransactions();
+                transactions.Add(new Transaction("Withdrawal", amount));
+                Console.WriteLine("The amount withdrawn successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Withdrawal exceeds overdraft limit.");
+            }
+        }
+
+        // method to print the account statement, including the overdraft limit
+        public sealed override void PrintStatement()
+        {
+            base.PrintStatement();
+            Console.WriteLine("Overdraft Limit: " + overdraftLimit);
+        }
+
     }
+
+
+
 
     class FixedDepositAccount : BankAccount
     {
