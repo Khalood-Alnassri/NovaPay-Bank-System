@@ -170,6 +170,20 @@ namespace NovaPay_Bank_System
             bank.ProcessWithdrawal(account, amount);
         }
 
+        // case 6: function to print account statement
+        public static void PrintAccountStatement(Bank bank)
+        {
+            Console.Write("Enter account number: ");
+            string input = Console.ReadLine() ?? string.Empty;
+
+            if (!int.TryParse(input, out int accountNumber))
+            {
+                Console.WriteLine("Invalid account number. Please enter a valid integer.");
+                return;
+            }
+
+            bank.PrintAccountStatement(accountNumber);
+        }
         static void Main(string[] args)
         {
             Bank bank = new Bank("NovaPay");
@@ -214,6 +228,8 @@ namespace NovaPay_Bank_System
                         break;
 
                     case 6:
+
+                        PrintAccountStatement(bank);
 
                         break;
 
