@@ -165,6 +165,12 @@ namespace NovaPay_Bank_System
             }
         }
 
+        // static method to increase the total transactions processed
+        public static void IncreaseTransactions()
+        {
+            totalTransactionsProcessed++;
+        }
+
         // constructor to initialize the account number and owner name
         public BankAccount(string ownerName)
         {
@@ -234,7 +240,46 @@ namespace NovaPay_Bank_System
 
     class SavingsAccount : BankAccount
     {
+        double interestRate;
+        static double MinBalance = 100;
 
+        // constructor to initialize the savings account
+        public SavingsAccount(string ownerName, double interestRate = 0.03) : base(ownerName)
+        {
+            AccountType = "Savings";
+            this.interestRate = 0.03;
+        }
+
+        // method to Withdraw 
+        public override void Withdraw(double amount)
+        {
+            if (amount > 0 && (balance - amount) >= MinBalance)
+            {
+                balance -= amount;
+                BankAccount.IncreaseTransactions();
+                transactions.Add(new Transaction("Withdrawal", amount));
+                Console.WriteLine("The amount withdrawn successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Withdrawal failed. Ensure the amount is positive and the remaining balance does not fall below the minimum balance of " + MinBalance);
+            }
+        }
+
+        //method to print the account statement, including the interest rate
+        public override void PrintStatement()
+        {
+            base.PrintStatement();
+            Console.WriteLine("Interest Rate: " + interestRate);
+        }
+
+        // method to apply interest to the account balance
+        public void ApplyInterest()
+        {
+            double interest = balance * interestRate;
+            Deposit(interest, "Interest Credit");
+            Console.WriteLine("Interest applied successfully. Interest amount: " + interest);
+        }
     }
 
     class CurrentAccount : BankAccount
