@@ -39,9 +39,26 @@ namespace NovaPay_Bank_System
             }
         }
 
+        // case 1: method to open a savings account
+        public static void OpenSavingsAccount(Bank bank)
+        {
+            Console.Write("Enter owner name: ");
+            string ownerName = Console.ReadLine() ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(ownerName))
+            {
+                Console.WriteLine("Invalid name.");
+                return;
+            }
+
+            BankAccount savingsAccount = new SavingsAccount(ownerName);
+            bank.OpenAccount(savingsAccount);
+            Console.WriteLine("Savings account opened successfully.");
+        }
+
         static void Main(string[] args)
         {
-
+            Bank bank = new Bank("NovaPay");
             bool exit = true;
 
             while (! exit)
@@ -53,6 +70,8 @@ namespace NovaPay_Bank_System
                 switch (choice)
                 {
                     case 1:
+
+                        OpenSavingsAccount(bank);
 
                         break;
 
