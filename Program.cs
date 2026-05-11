@@ -81,6 +81,32 @@ namespace NovaPay_Bank_System
             bank.OpenAccount(currentAccount);
             Console.WriteLine("Current account opened successfully.");
         }
+
+        // case 3: method to open a fixed deposit account
+        public static void OpenFixedDepositAccount(Bank bank)
+        {
+            Console.Write("Enter owner name: ");
+            string ownerName = Console.ReadLine() ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(ownerName))
+            {
+                Console.WriteLine("Invalid name.");
+                return;
+            }
+
+            Console.Write("Enter deposit amount: ");
+            string input = Console.ReadLine() ?? string.Empty;
+
+            if (!double.TryParse(input, out double depositAmount) || depositAmount <= 0)
+            {
+                Console.WriteLine("Invalid deposit amount. Please enter a number greater than zero.");
+                return;
+            }
+
+            BankAccount fixedDepositAccount = new FixedDepositAccount(ownerName, depositAmount);
+            bank.OpenAccount(fixedDepositAccount);
+            Console.WriteLine("Fixed Deposit account opened successfully.");
+        }
         static void Main(string[] args)
         {
             Bank bank = new Bank("NovaPay");
@@ -107,6 +133,8 @@ namespace NovaPay_Bank_System
                         break;
 
                     case 3:
+
+                        OpenFixedDepositAccount(bank);
 
                         break;
 
