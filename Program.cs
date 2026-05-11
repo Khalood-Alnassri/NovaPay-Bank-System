@@ -5,7 +5,7 @@ namespace NovaPay_Bank_System
 { 
     internal class Program
     {
-        Bank 
+         
         public static void DisplayMenu()
         {
             Console.WriteLine("============================================");
@@ -216,7 +216,7 @@ namespace NovaPay_Bank_System
             }
         }
 
-
+        // case 8: function to display bank summary
 
 
         static void Main(string[] args)
@@ -275,6 +275,8 @@ namespace NovaPay_Bank_System
                         break;
 
                     case 8:
+
+                        bank.DisplaySummary();
 
                         break;
 
