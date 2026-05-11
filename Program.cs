@@ -216,10 +216,27 @@ namespace NovaPay_Bank_System
             }
         }
 
-        // case 8: function to display bank summary
+        // case 9: function to Exit the application
+        public static bool Exit()
+        {
+            Console.WriteLine("Are you sure you want to exit? (yes/no): ");
+            string confirmExit = Console.ReadLine() ?? string.Empty;
+
+            if (confirmExit == "yes")
+            {
+                Console.WriteLine("Exiting system...");
+                Console.WriteLine("Thank you for using the Healthcare Management System!");
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("Exit cancelled. Returning to main menu...");
+                return false;
+            }
+        }
 
 
-        static void Main(string[] args)
+            static void Main(string[] args)
         {
             Bank bank = new Bank("NovaPay");
             bool exit = true;
@@ -282,6 +299,8 @@ namespace NovaPay_Bank_System
 
                     case 9:
                         
+                        exit = Exit();
+
                         break;
 
                     default:
