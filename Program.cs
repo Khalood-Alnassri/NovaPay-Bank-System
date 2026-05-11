@@ -39,7 +39,7 @@ namespace NovaPay_Bank_System
             }
         }
 
-        // case 1: method to open a savings account
+        // case 1: function to open a savings account
         public static void OpenSavingsAccount(Bank bank)
         {
             Console.Write("Enter owner name: ");
@@ -56,7 +56,7 @@ namespace NovaPay_Bank_System
             Console.WriteLine("Savings account opened successfully.");
         }
 
-        // case 2: method to open a current account
+        // case 2: function to open a current account
         public static void OpenCurrentAccount(Bank bank)
         {
             Console.Write("Enter owner name: ");
@@ -82,7 +82,7 @@ namespace NovaPay_Bank_System
             Console.WriteLine("Current account opened successfully.");
         }
 
-        // case 3: method to open a fixed deposit account
+        // case 3: function to open a fixed deposit account
         public static void OpenFixedDepositAccount(Bank bank)
         {
             Console.Write("Enter owner name: ");
@@ -108,7 +108,7 @@ namespace NovaPay_Bank_System
             Console.WriteLine("Fixed Deposit account opened successfully.");
         }
 
-        // case 4: method to process a deposit
+        // case 4: function to process a deposit
         public static void Deposit(Bank bank)
         {
             Console.Write("Enter account number: ");
@@ -139,8 +139,36 @@ namespace NovaPay_Bank_System
             bank.ProcessDeposit(account, amount);
         }
 
+        // case 5: function to process a withdrawal
+        public static void Withdraw(Bank bank)
+        {
+            Console.Write("Enter account number: ");
+            string input = Console.ReadLine() ?? string.Empty;
 
+            if (!int.TryParse(input, out int accountNumber))
+            {
+                Console.WriteLine("Invalid account number. Please enter a valid integer.");
+                return;
+            }
 
+            BankAccount account = bank.FindAccount(accountNumber);
+            if (account == null)
+            {
+                Console.WriteLine("Account not found.");
+                return;
+            }
+
+            Console.Write("Enter withdrawal amount: ");
+            input = Console.ReadLine() ?? string.Empty;
+
+            if (!double.TryParse(input, out double amount) || amount <= 0)
+            {
+                Console.WriteLine("Invalid withdrawal amount. Please enter a number greater than zero.");
+                return;
+            }
+
+            bank.ProcessWithdrawal(account, amount);
+        }
 
         static void Main(string[] args)
         {
@@ -180,6 +208,8 @@ namespace NovaPay_Bank_System
                         break;
 
                     case 5:
+
+                        Withdraw(bank);
 
                         break;
 
