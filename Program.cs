@@ -1,4 +1,6 @@
-﻿namespace NovaPay_Bank_System
+﻿using System.Runtime.CompilerServices;
+
+namespace NovaPay_Bank_System
 {
     internal class Program
     {
@@ -118,7 +120,116 @@
 
     abstract class BankAccount : IDepositable, IWithdrawable, IStatementPrintable
     {
-        
+        static int nextAccountNumber = 1001;
+        static int totalTransactionsProcessed;
+        protected double balance;
+        protected List<Transaction> transactions;
+        string accountType;
+        string ownerName;
+
+        // property to only get the account number
+        public int GetAccountNumber { get; }
+
+        // property to only get the Owner Name 
+        public string GetOwnerName { get; }
+
+        // property to only get the balance
+        public double GetBalance { get; }
+
+        // property to get and set the account type
+        public string AccountType
+        {
+            get
+            {
+                return accountType;
+            }
+
+            set
+            {
+                if (value == "savings")
+                {
+                    accountType = "Savings";
+                }
+                else if (value == "current")
+                {
+                    accountType = "Current";
+                }
+                else if (value == "fixed deposit")
+                {
+                    accountType = "Fixed Deposit";
+                }
+                else
+                {
+                    Console.WriteLine("Invalid account type. Please choose 'Savings', 'Current', or 'Fixed Deposit'.");
+                }
+            }
+        }
+
+        // constructor to initialize the account number and owner name
+        public BankAccount(string ownerName)
+        {
+            this.ownerName = ownerName;
+            this.GetAccountNumber = nextAccountNumber++;
+            this.balance = 0.0;
+            this.transactions = new List<Transaction>();
+        }
+
+        // method to get the total number of transactions processed
+        public static int GetTotalTransactions()
+        {
+            return totalTransactionsProcessed;
+        }
+
+        // method to deposit money into the account
+        public void Deposit(double amount)
+        {
+            if(amount > 0)
+            {
+                balance += amount;
+                totalTransactionsProcessed++;
+                transactions.Add(new Transaction ("Deposit", amount));
+                Console.WriteLine("The amount deposited successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Deposit amount must be greater than zero.");
+            }
+        }
+
+        // overloaded method to deposit money with a note
+        public void Deposit(double amount, string note)
+        {
+            if (amount > 0)
+            {
+                balance += amount;
+                totalTransactionsProcessed++;
+                transactions.Add(new Transaction("Deposit", amount));
+                Console.WriteLine("The amount deposited successfully.");
+                note = "Interest Credit";
+            }
+            else
+            {
+                Console.WriteLine("Deposit amount must be greater than zero.");
+            }
+        }
+
+        // abstract method to withdraw money from the account
+        public abstract void Withdraw(double amount);
+
+        public virtual void PrintStatement()
+        { 
+            Console.WriteLine("Account Number: " + nextAccountNumber);
+            Console.WriteLine("Owner Name: " + ownerName);
+            Console.WriteLine("Account Type: " + accountType);
+            Console.WriteLine("Balance: " + balance);
+
+            // print the transaction history
+            foreach (var transaction in transactions)
+            {
+                transaction.DisplayInfo();
+            }
+
+        }
     }
 
     class SavingsAccount : BankAccount
@@ -135,7 +246,24 @@
     }
      class Transaction
     {
+        string type;
+        double amount;
+        DateTime date;
+        string note;
 
+        // constructor to initialize the transaction details
+        public Transaction(string type, double amount, string note = "")
+        {
+            this.type = type;
+            this.amount = amount;
+            this.date = DateTime.Now;
+            this.note = note;
+        }
+
+        public void DisplayInfo()
+        {
+
+        }
     }
 
     class Bank
