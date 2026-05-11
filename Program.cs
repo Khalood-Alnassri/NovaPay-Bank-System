@@ -56,6 +56,31 @@ namespace NovaPay_Bank_System
             Console.WriteLine("Savings account opened successfully.");
         }
 
+        // case 2: method to open a current account
+        public static void OpenCurrentAccount(Bank bank)
+        {
+            Console.Write("Enter owner name: ");
+            string ownerName = Console.ReadLine() ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(ownerName))
+            {
+                Console.WriteLine("Invalid name.");
+                return;
+            }
+
+            Console.Write("Enter overdraft limit: ");
+            string input = Console.ReadLine() ?? string.Empty;
+
+            if (!double.TryParse(input, out double overdraftLimit) || overdraftLimit < 0)
+            {
+                Console.WriteLine("Invalid overdraft limit. Please enter a non-negative number.");
+                return;
+            }
+
+            BankAccount currentAccount = new CurrentAccount(ownerName, overdraftLimit);
+            bank.OpenAccount(currentAccount);
+            Console.WriteLine("Current account opened successfully.");
+        }
         static void Main(string[] args)
         {
             Bank bank = new Bank("NovaPay");
@@ -76,6 +101,8 @@ namespace NovaPay_Bank_System
                         break;
 
                     case 2:
+
+                        OpenCurrentAccount(bank);
 
                         break;
 
