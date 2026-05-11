@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using System.Security.Principal;
 
 namespace NovaPay_Bank_System
 {
@@ -390,6 +391,120 @@ namespace NovaPay_Bank_System
 
     class Bank
     {
+        // Auto-Implemented Property to get and set the bank name
+        public string BankName { get; private set; }
+
+        List<BankAccount> accounts;
+
+        // constructor to initialize the bank 
+        public Bank(string name)
+        {
+            BankName = name;
+            accounts = new List<BankAccount>();
+        }
+
+        //----------------------------- Account Management ------------------------------
+
+        // method to open a new account and add it to the list of accounts
+        public void OpenAccount(BankAccount account)
+        {
+            if (accounts != null)
+            { 
+                accounts.Add(account);
+                Console.WriteLine("Account Number: " + account.GetAccountNumber);
+            }
+
+        }
+
+        // method to find an account by account number
+        public BankAccount FindAccount(int accountNumber)
+        {
+            BankAccount account = accounts.Find(a => a.GetAccountNumber == accountNumber);
+
+            if (account != null)
+            {
+                return account;
+            }
+            else
+            {
+                Console.WriteLine("Account not found.");
+                return null;
+            }
+        }
+
+
+        //------------------------------ Deposit — Parameter declared as IDepositable ------------------------------\
+
+        public void ProcessDeposit(IDepositable account, double amount)
+        {
+            account.Deposit(amount);
+        }
+
+        //------------------------------ Withdraw — Parameter declared as IWithdrawable ------------------------------
+
+        public void ProcessWithdrawal(IWithdrawable account, double amount)
+        {
+            account.Withdraw(amount);
+        }
+
+        //------------------------------------------------ Statement ---------------------------------------
+
+        // method to print the account statement, parameter declared as IStatementPrintable
+        public void PrintAccountStatement(int accountNumber)
+        {
+            FindAccount(accountNumber);
+            IStatementPrintable printable = accounts as IStatementPrintable;
+
+            if (accounts != null)
+            {
+                printable.PrintStatement();
+            }
+
+            else
+            {
+                Console.WriteLine("Error. Account not found!");
+            }
+        }
+
+        //------------------------------------------- Statistics / Report ----------------------------------
+
+        // method to display the bank statistics
+        public void DisplaySummary()
+        {
+            int totalSaving =0;
+            int totalCurrent = 0;
+            int totalFixedDeposit = 0;
+
+             foreach (var account in accounts)
+            {
+                if (account is SavingsAccount)
+                {
+                    totalSaving++;
+                }
+                else if (account is CurrentAccount)
+                {
+                    totalCurrent++;
+                }
+                else if (account is FixedDepositAccount)
+                {
+                    totalFixedDeposit++;
+                }
+            }
+
+            double totalBalance = 0;
+            foreach (BankAccount account in accounts)
+            {
+                totalBalance += account.GetBalance;
+            }
+          
+            Console.WriteLine("=================== Bank Statistics =================");
+            Console.WriteLine("Bank Name: " + BankName);
+            Console.WriteLine("Total accounts: " + accounts);
+            Console.WriteLine("Count of each type: Savings: " + totalSaving + " | Current: " + totalCurrent + " | Fixed Deposit: " + totalFixedDeposit);
+            Console.WriteLine("Total balances: " + totalBalance);
+            Console.WriteLine("Total transactions processed: " + BankAccount.GetTotalTransactions());
+
+        }
 
     }
 
