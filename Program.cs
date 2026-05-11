@@ -2,9 +2,10 @@
 using System.Security.Principal;
 
 namespace NovaPay_Bank_System
-{
+{ 
     internal class Program
     {
+        Bank 
         public static void DisplayMenu()
         {
             Console.WriteLine("============================================");
@@ -184,6 +185,40 @@ namespace NovaPay_Bank_System
 
             bank.PrintAccountStatement(accountNumber);
         }
+
+        // case 7: function to apply interest to a savings account
+        public static void ApplyInterest(Bank bank)
+        {
+            Console.Write("Enter account number: ");
+            string input = Console.ReadLine() ?? string.Empty;
+
+            if (!int.TryParse(input, out int accountNumber))
+            {
+                Console.WriteLine("Invalid account number. Please enter a valid integer.");
+                return;
+            }
+
+            BankAccount account = bank.FindAccount(accountNumber);
+
+            if (account == null)
+            {
+                Console.WriteLine("Account not found.");
+                return;
+            }
+
+            if (account is SavingsAccount savingsAccount)
+            {
+                savingsAccount.ApplyInterest();
+            }
+            else
+            {
+                Console.WriteLine("Interest can only be applied to Savings accounts.");
+            }
+        }
+
+
+
+
         static void Main(string[] args)
         {
             Bank bank = new Bank("NovaPay");
@@ -234,6 +269,8 @@ namespace NovaPay_Bank_System
                         break;
 
                     case 7:
+
+                        ApplyInterest(bank);
 
                         break;
 
