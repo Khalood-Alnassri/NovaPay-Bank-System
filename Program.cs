@@ -330,13 +330,41 @@ namespace NovaPay_Bank_System
 
     }
 
-
-
-
     class FixedDepositAccount : BankAccount
     {
+        double lockedAmount;
+
+        // constructor to initialize the fixed deposit account
+        public FixedDepositAccount(string ownerName, double depositAmount) : base(ownerName)
+        {
+            AccountType = "Fixed Deposit";
+
+            if(depositAmount > 0)
+            {
+                this.lockedAmount = depositAmount;
+                Deposit(depositAmount, "Initial Fixed Deposit");
+            }
+            else
+            {
+                Console.WriteLine("Deposit amount must be greater than zero.");
+            }
+        }
+
+        // method to Withdraw
+        public override void Withdraw(double amount)
+        {
+            Console.WriteLine("Fixed Deposit accounts cannot be withdrawn before maturity.");
+        }
+
+        // method to print the account statement, including the locked amount
+        public override void PrintStatement()
+        {
+            base.PrintStatement();
+            Console.WriteLine("Locked Amount: " + lockedAmount);
+        }
+
     }
-     class Transaction
+    class Transaction
     {
         string type;
         double amount;
