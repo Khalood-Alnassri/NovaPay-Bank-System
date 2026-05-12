@@ -5,7 +5,7 @@ namespace NovaPay_Bank_System
 { 
     internal class Program
     {
-         
+         public static Bank bank = new Bank("NovaPay");
         public static void DisplayMenu()
         {
             Console.WriteLine("============================================");
@@ -239,7 +239,7 @@ namespace NovaPay_Bank_System
             static void Main(string[] args)
         {
             Bank bank = new Bank("NovaPay");
-            bool exit = true;
+            bool exit = false;
 
             while (! exit)
             {
@@ -353,33 +353,7 @@ namespace NovaPay_Bank_System
         public double GetBalance { get; }
 
         // property to get and set the account type
-        public string AccountType
-        {
-            get
-            {
-                return accountType;
-            }
-
-            set
-            {
-                if (value == "savings")
-                {
-                    accountType = "Savings";
-                }
-                else if (value == "current")
-                {
-                    accountType = "Current";
-                }
-                else if (value == "fixed deposit")
-                {
-                    accountType = "Fixed Deposit";
-                }
-                else
-                {
-                    Console.WriteLine("Invalid account type. Please choose 'Savings', 'Current', or 'Fixed Deposit'.");
-                }
-            }
-        }
+        public string AccountType { get; protected set; }
 
         // static method to increase the total transactions processed
         public static void IncreaseTransactions()
@@ -463,7 +437,7 @@ namespace NovaPay_Bank_System
         public SavingsAccount(string ownerName, double interestRate = 0.03) : base(ownerName)
         {
             AccountType = "Savings";
-            this.interestRate = 0.03;
+            this.interestRate = interestRate;
         }
 
         // method to Withdraw 
@@ -667,12 +641,16 @@ namespace NovaPay_Bank_System
         // method to print the account statement, parameter declared as IStatementPrintable
         public void PrintAccountStatement(int accountNumber)
         {
-            FindAccount(accountNumber);
-            IStatementPrintable printable = accounts as IStatementPrintable;
+            BankAccount account = FindAccount(accountNumber);
 
             if (accounts != null)
             {
-                printable.PrintStatement();
+                IStatementPrintable printable = account as IStatementPrintable;
+
+                if (printable != null)
+                {
+                    printable.PrintStatement();
+                }
             }
 
             else
