@@ -175,15 +175,11 @@ namespace NovaPay_Bank_System
         public static void PrintAccountStatement(Bank bank)
         {
             Console.Write("Enter account number: ");
-            string input = Console.ReadLine() ?? string.Empty;
+            int input = int.Parse(Console.ReadLine());
 
-            if (!int.TryParse(input, out int accountNumber))
-            {
-                Console.WriteLine("Invalid account number. Please enter a valid integer.");
-                return;
-            }
+           
 
-            bank.PrintAccountStatement(accountNumber);
+            bank.PrintAccountStatement(input);
         }
 
         // case 7: function to apply interest to a savings account
@@ -353,7 +349,7 @@ namespace NovaPay_Bank_System
         public double GetBalance { get; }
 
         // property to get and set the account type
-        public string AccountType { get; protected set; }
+        public string AccountType { get ; protected set; }
 
         // static method to increase the total transactions processed
         public static void IncreaseTransactions()
@@ -402,6 +398,7 @@ namespace NovaPay_Bank_System
                 transactions.Add(new Transaction("Deposit", amount));
                 Console.WriteLine("The amount deposited successfully.");
                 note = "Interest Credit";
+                Console.WriteLine("Total balance: "+ balance);
             }
             else
             {
@@ -414,9 +411,9 @@ namespace NovaPay_Bank_System
 
         public virtual void PrintStatement()
         { 
-            Console.WriteLine("Account Number: " + nextAccountNumber);
+            Console.WriteLine("Account Number: " + GetAccountNumber);
             Console.WriteLine("Owner Name: " + ownerName);
-            Console.WriteLine("Account Type: " + accountType);
+            Console.WriteLine("Account Type: " + AccountType);
             Console.WriteLine("Balance: " + balance);
 
             // print the transaction history
@@ -436,7 +433,7 @@ namespace NovaPay_Bank_System
         // constructor to initialize the savings account
         public SavingsAccount(string ownerName, double interestRate = 0.03) : base(ownerName)
         {
-            AccountType = "Savings";
+            this.AccountType = "Savings";
             this.interestRate = interestRate;
         }
 
@@ -449,6 +446,7 @@ namespace NovaPay_Bank_System
                 BankAccount.IncreaseTransactions();
                 transactions.Add(new Transaction("Withdrawal", amount));
                 Console.WriteLine("The amount withdrawn successfully.");
+                Console.WriteLine("Current balance: " + balance);
             }
             else
             {
@@ -504,6 +502,7 @@ namespace NovaPay_Bank_System
                 BankAccount.IncreaseTransactions();
                 transactions.Add(new Transaction("Withdrawal", amount));
                 Console.WriteLine("The amount withdrawn successfully.");
+                Console.WriteLine("Current balance: " + balance);
             }
             else
             {
@@ -643,20 +642,16 @@ namespace NovaPay_Bank_System
         {
             BankAccount account = FindAccount(accountNumber);
 
-            if (accounts != null)
+            if (account == null)
             {
-                IStatementPrintable printable = account as IStatementPrintable;
+               Console.WriteLine("No accounts found.");
+                return;
 
-                if (printable != null)
-                {
-                    printable.PrintStatement();
-                }
             }
+            IStatementPrintable printable = account as IStatementPrintable;
+            printable.PrintStatement();
 
-            else
-            {
-                Console.WriteLine("Error. Account not found!");
-            }
+           
         }
 
         //------------------------------------------- Statistics / Report ----------------------------------
